@@ -35,6 +35,21 @@ router.post('/student/:studentId', async (req, res, next) => {
   }
 });
 
+router.get('/student/:studentId', async (req, res, next) => {
+  try {
+    let studentId = req.params.studentId;
+    let allTestsFromStudent = await Test.findAll({
+      where: {
+        studentId,
+      },
+    });
+    console.log('TCL: allTestsFromStudent', allTestsFromStudent);
+    res.status(201).send(allTestsFromStudent);
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.delete('/:id', async (req, res, next) => {
   try {
     await Test.destroy({ where: { id: req.params.id } });

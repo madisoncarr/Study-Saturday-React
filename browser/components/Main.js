@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import StudentList from './StudentList';
+import SingleStudent from './SingleStudent';
 
 export default class Main extends Component {
   constructor(props) {
     super(props);
     this.state = {
       students: [],
+      singleStudentScores: [],
     };
+    this.getStudentTestScores = this.getStudentTestScores.bind(this);
   }
 
   componentDidMount() {
@@ -23,7 +27,18 @@ export default class Main extends Component {
     }
   }
 
+  async getStudentTestScores(event) {
+    const { data: allStudentTestInfo } = await axios.get(
+      `/test/student/${event}`
+    );
+    this.setState({ singleStudentScores: allStudentTestInfo });
+  }
+
   render() {
+    console.log(
+      'single student scores from click event value 1',
+      this.state.singleStudentScores
+    );
     return (
       <div>
         <h1>Students</h1>
@@ -31,16 +46,19 @@ export default class Main extends Component {
           <tbody>
             <tr>
               <th>Name</th>
+              <th>Tests</th>
             </tr>
-            {this.state.students.map(student => {
-              return (
-                <tr key={student.id}>
-                  <td>{student.fullName}</td>
-                </tr>
-              );
-            })}
+            <StudentList
+              students={this.state.students}
+              getStudentTestScores={this.getStudentTestScores}
+            />
           </tbody>
         </table>
+        {this.state.singleStudentScores.length !== 0 ? (
+          <SingleStudent singleStudentScores={this.state.singleStudentScores} />
+        ) : (
+          <span />
+        )}
       </div>
     );
   }
