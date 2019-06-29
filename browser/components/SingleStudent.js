@@ -1,11 +1,22 @@
 import React from 'react';
 
 class SingleStudent extends React.Component {
+  constructor() {
+    super();
+    this.averageGrade = this.averageGrade.bind(this);
+  }
+  averageGrade() {
+    let average = 0;
+    this.props.singleStudentScores.forEach(currentGrade => {
+      average += currentGrade.grade;
+    });
+    return average / this.props.singleStudentScores.length;
+  }
   render() {
     return (
       <React.Fragment>
-        <h1>Student Name</h1>
-        <h2>Average grade: 50%</h2>
+        <h1>{this.props.singleStudentScores[0].student.fullName}</h1>
+        <h2>Average grade: {this.averageGrade()}%</h2>
         <table>
           <thead>
             <tr>
@@ -14,18 +25,14 @@ class SingleStudent extends React.Component {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Computer Science</td>
-              <td>45%</td>
-            </tr>
-            <tr>
-              <td>Art</td>
-              <td>60%</td>
-            </tr>
-            <tr>
-              <td>iure</td>
-              <td>45%</td>
-            </tr>
+            {this.props.singleStudentScores.map(currentScore => {
+              return (
+                <tr key={currentScore.id}>
+                  <td>{currentScore.subject}</td>
+                  <td>{currentScore.grade}%</td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </React.Fragment>

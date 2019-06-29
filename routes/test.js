@@ -39,9 +39,8 @@ router.get('/student/:studentId', async (req, res, next) => {
   try {
     let studentId = req.params.studentId;
     let allTestsFromStudent = await Test.findAll({
-      where: {
-        studentId,
-      },
+      where: { studentId },
+      include: [{ all: true }],
     });
     console.log('TCL: allTestsFromStudent', allTestsFromStudent);
     res.status(201).send(allTestsFromStudent);
